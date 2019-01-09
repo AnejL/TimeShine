@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="400dp"
-    android:background="#A9A9A9">
+    android:background="#A9A9A9"
+    tools:context=".MainActivity">
 
 
     <Button
@@ -37,7 +38,7 @@
         android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/time"
+        android:id="@+id/duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/saveStart"
@@ -45,14 +46,15 @@
         android:layout_marginTop="151dp"
         android:ems="10"
         android:hint="Duration"
+        android:focusable="false"
         android:inputType="textPersonName" />
 
     <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/time"
-        android:layout_marginTop="10dp"
-        android:layout_alignStart="@+id/saveStart" >
+        android:layout_below="@+id/duration"
+        android:layout_alignStart="@+id/saveStart"
+        android:layout_marginTop="10dp">
 
         <RadioButton
             android:id="@+id/radioButton"

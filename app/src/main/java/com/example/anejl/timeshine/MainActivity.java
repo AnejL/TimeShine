@@ -1,7 +1,9 @@
 package com.example.anejl.timeshine;
 
+import android.app.TimePickerDialog;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,10 +15,14 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.TimePicker;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,9 +30,13 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     ArrayAdapter<String> tasksAdapter;
     ArrayList tasks;
+    EditText name;
+    EditText duration;
 
+    Button start;
+    Button saveStart;
     PopupWindow popUp;
-
+    private TimePickerDialog.OnTimeSetListener timeSetListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(tasksAdapter);
         popUp=new PopupWindow(this);
 
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,8 +61,39 @@ public class MainActivity extends AppCompatActivity {
                 View popupView = inflater.inflate(R.layout.popup_window,null);
                 popUp=new PopupWindow(popupView,800,1000,true);
                 popUp.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+                start=popupView.findViewById(R.id.start);
+                saveStart=popupView.findViewById(R.id.saveStart);
+                name=popupView.findViewById(R.id.name);
+                duration=popupView.findViewById(R.id.duration);
+
+                duration.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        TimePickerDialog dialog = new TimePickerDialog(MainActivity.this,android.R.style.Theme_DeviceDefault_Dialog_MinWidth,timeSetListener,0,0,true);
+                        dialog.show();
+                    }
+                });
+
+                timeSetListener= new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        String time = hourOfDay+"h "+minute+"m";
+                        duration.setText(time);
+                    }
+                };
+                saveStart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String title=name.getText().toString();
+
+                    }
+                });
             }
         });
+
+
 
 
 
