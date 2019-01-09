@@ -54,17 +54,19 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/duration"
         android:layout_alignStart="@+id/saveStart"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:id="@+id/radioGroup">
 
         <RadioButton
-            android:id="@+id/radioButton"
+            android:id="@+id/workout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:checked="true"
             android:text="Workout" />
 
         <RadioButton
-            android:id="@+id/radioButton2"
+            android:id="@+id/rest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

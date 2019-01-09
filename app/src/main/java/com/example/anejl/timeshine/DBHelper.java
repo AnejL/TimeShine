@@ -12,7 +12,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String tasks_id = "id";
     public static final String tasks_name = "name";
     public static final String tasks_type = "type";
-    public static final String tasks_duration = "duration";
+    public static final String tasks_hour = "hour";
+    public static final String tasks_minute = "minute";
 
     public static String stats_table_name = "stats";
     public static String stats_id = "id";
@@ -24,7 +25,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table tasks (id integer primary key autoincrement, name text, type text, duration text)");
+        db.execSQL("create table tasks (id integer primary key autoincrement, name text, type text, hour text, minute text)");
         db.execSQL("create table stats (id integer primary key autoincrement, comment text, fk_id_task integer, foreign key (fk_id_task) references tasks(id))");
     }
 
@@ -35,12 +36,13 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertTask(String name, String type, String duration) {
+    public void insertTask(String name, String type, String hour,String minute) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(tasks_name, name);
         cv.put(tasks_type, type);
-        cv.put(tasks_duration, duration);
+        cv.put(tasks_hour, hour);
+        cv.put(tasks_minute, minute);
         db.insert(tasks_table_name, null, cv);
     }
 
@@ -55,12 +57,13 @@ public class DBHelper extends SQLiteOpenHelper {
         db.delete(tasks_table_name, "id=" + id, null);
     }
 
-    public void editTask(int id, String name, String type, String duration) {
+    public void editTask(int id, String name, String type, String hour,String minute) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(tasks_name, name);
         cv.put(tasks_type, type);
-        cv.put(tasks_duration, duration);
+        cv.put(tasks_hour, hour);
+        cv.put(tasks_minute, minute);
         db.update(tasks_table_name, cv, "id="+id,null);
     }
 }
