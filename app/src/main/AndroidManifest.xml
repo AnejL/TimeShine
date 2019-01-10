@@ -19,7 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Task"></activity>
+        <activity android:name=".Task" />
+        <activity android:name=".stats"></activity>
     </application>
 
 </manifest>

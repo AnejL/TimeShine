@@ -14,6 +14,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String tasks_type = "type";
     public static final String tasks_hour = "hour";
     public static final String tasks_minute = "minute";
+    public static final String tasks_saved = "saved";
 
     public static String stats_table_name = "stats";
     public static String stats_id = "id";
@@ -25,7 +26,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table tasks (id integer primary key autoincrement, name text, type text, hour text, minute text)");
+        db.execSQL("create table tasks (id integer primary key autoincrement, name text, type text, hour text, minute text,saved text)");
         db.execSQL("create table stats (id integer primary key autoincrement, comment text, fk_id_task integer, foreign key (fk_id_task) references tasks(id))");
     }
 
@@ -36,19 +37,42 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertTask(String name, String type, String hour,String minute) {
+    public void insertTask(String name, String type, String hour,String minute,String saved) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(tasks_name, name);
         cv.put(tasks_type, type);
         cv.put(tasks_hour, hour);
         cv.put(tasks_minute, minute);
+        cv.put(tasks_saved, saved);
         db.insert(tasks_table_name, null, cv);
     }
 
     public Cursor getTasks() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor data = db.rawQuery("select * from tasks", null);
+        return data;
+    }
+
+    public int getMaxID(){
+        SQLiteDatabase db=this.getReadableDatabase();
+        Cursor data= db.rawQuery("select max(id) from tasks",null);
+        data.moveToFirst();
+        int k=data.getInt(0);
+        return data.getInt(0);
+    }
+
+    public void insertStat(int id,String comment){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("comment","Trenutni Commen");
+        cv.put("fk_id_task",id);
+        db.insert(stats_table_name, null, cv);
+    }
+
+    public Cursor getStats() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor data = db.rawQuery("select * from stats", null);
         return data;
     }
 

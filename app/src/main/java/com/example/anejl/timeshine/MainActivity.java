@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     String dbM = "";
     String dbType = "";
     Intent intent;
+    Intent intentStat;
     private TimePickerDialog.OnTimeSetListener timeSetListener;
 
     @Override
@@ -63,8 +64,15 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(tasksAdapter);
         popUp = new PopupWindow(this);
         intent = new Intent(this, Task.class);
-
+        intentStat=new Intent(this, stats.class);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton stats = (FloatingActionButton) findViewById(R.id.stats);
+        stats.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intentStat);
+            }
+        });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,15 +107,17 @@ public class MainActivity extends AppCompatActivity {
                 saveStart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(setupTask()){
-                        insertTask(dbName, dbType, dbH, dbM);
-                        showTasks();
-                        intent.putExtra("name", dbName);
-                        intent.putExtra("type", dbType);
-                        intent.putExtra("h", Integer.parseInt(dbH));
-                        intent.putExtra("m", Integer.parseInt(dbM));
-                        startActivity(intent);
-                        }else{
+                        if (setupTask()) {
+                            insertTask(dbName, dbType, dbH, dbM, "true");
+                            showTasks();
+                            int index=database.getMaxID();
+                            intent.putExtra("id",index);
+                            intent.putExtra("name", dbName);
+                            intent.putExtra("type", dbType);
+                            intent.putExtra("h", Integer.parseInt(dbH));
+                            intent.putExtra("m", Integer.parseInt(dbM));
+                            startActivity(intent);
+                        } else {
                             Toast.makeText(MainActivity.this, "Please fill out all information!", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -116,13 +126,16 @@ public class MainActivity extends AppCompatActivity {
                 start.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(setupTask()){
+                        if (setupTask()) {
+                            insertTask(dbName, dbType, dbH, dbM, "false");
+                            int index=database.getMaxID();
+                            intent.putExtra("id",index);
                             intent.putExtra("name", dbName);
                             intent.putExtra("type", dbType);
                             intent.putExtra("h", Integer.parseInt(dbH));
                             intent.putExtra("m", Integer.parseInt(dbM));
                             startActivity(intent);
-                        }else{
+                        } else {
                             Toast.makeText(MainActivity.this, "Please fill out all information!", Toast.LENGTH_SHORT).show();
                         }
 
@@ -137,28 +150,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean setupTask() {
-        boolean pass=false;
+        boolean pass = false;
         dbName = name.getText().toString();
         if (rb1.isChecked()) {
             dbType = "Workout";
         } else
             dbType = "Rest";
-        if(dbH.length()>0 && dbM.length()>0 && dbName.length()>0){
-            pass=true;
+        if (dbH.length() > 0 && dbM.length() > 0 && dbName.length() > 0) {
+            pass = true;
         }
 
         return pass;
     }
 
-    public void insertTask(String name, String type, String h, String m) {
-        database.insertTask(name, type, h, m);
+    public void insertTask(String name, String type, String h, String m, String saved) {
+        database.insertTask(name, type, h, m, saved);
     }
 
     public void showTasks() {
         tasks.clear();
         Cursor data = database.getTasks();
         while (data.moveToNext()) {
-            tasks.add(data.getString(0) + " " + data.getString(1) + " " + data.getString(2) + " " + data.getString(3) + " " + data.getString(4));
+            if (data.getString(5).equals("true"))
+                tasks.add(data.getString(0) + " " + data.getString(1) + " " + data.getString(2) + " " + data.getString(3) + " " + data.getString(4));
         }
         tasksAdapter.notifyDataSetChanged();
     }
