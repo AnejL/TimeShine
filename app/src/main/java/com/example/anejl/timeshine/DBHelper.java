@@ -30,6 +30,12 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table stats (id integer primary key autoincrement, comment text, fk_id_task integer, foreign key (fk_id_task) references tasks(id))");
     }
 
+    public void reset() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("create table tasks (id integer primary key autoincrement, name text, type text, hour text, minute text,saved text)");
+        db.execSQL("create table stats (id integer primary key autoincrement, comment text, fk_id_task integer, foreign key (fk_id_task) references tasks(id))");
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("drop table if exists tasks");

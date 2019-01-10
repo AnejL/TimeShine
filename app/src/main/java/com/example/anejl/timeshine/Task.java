@@ -22,6 +22,7 @@ public class Task extends AppCompatActivity {
     String type;
     TextView countdown;
     TextView percentage;
+    TextView task_name;
     int seconds;
     int fixedSeconds;
     int id;
@@ -39,6 +40,7 @@ public class Task extends AppCompatActivity {
         id=intent.getIntExtra("id",0);
         countdown=findViewById(R.id.countdown);
         percentage=findViewById(R.id.percentage);
+        task_name=findViewById(R.id.name);
         seconds = h*3600+m*60;
         fixedSeconds=seconds;
         database = new DBHelper(this);
@@ -51,6 +53,7 @@ public class Task extends AppCompatActivity {
             }
         },0,1000);
 
+
     }
 
     public void countDown(){
@@ -60,6 +63,7 @@ public class Task extends AppCompatActivity {
             stats();
         }
         percentage.setText((seconds*100)/fixedSeconds+"%");
+        task_name.setText(name);
     }
 
     public void stats(){

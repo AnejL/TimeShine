@@ -43,4 +43,15 @@
         app:layout_anchorGravity="bottom|center"
         app:srcCompat="@drawable/ic_stats" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/clear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="left|bottom"
+        app:srcCompat="@android:drawable/star_off"
+        app:useCompatPadding="false" />
+
 </android.support.design.widget.CoordinatorLayout>

@@ -24,11 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<<<<<<< HEAD
-        <activity android:name=".Task" />
         <activity android:name=".stats"></activity>
-=======
->>>>>>> 186da88822edb7866606aa9999e16e37b14c967a
+
     </application>
 
 </manifest>

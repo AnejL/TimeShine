@@ -60,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         database = new DBHelper(this);
+
+
+
         listView = findViewById(R.id.listView);
         tasks = new ArrayList();
         tasksAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, tasks);
@@ -67,14 +70,22 @@ public class MainActivity extends AppCompatActivity {
         popUp = new PopupWindow(this);
         intent = new Intent(this, Task.class);
         intentStat=new Intent(this, stats.class);
+
+
+        //database.reset();
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         FloatingActionButton stats = (FloatingActionButton) findViewById(R.id.stats);
+        FloatingActionButton clear = (FloatingActionButton) findViewById(R.id.clear);
+
         stats.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(intentStat);
             }
         });
+        //clear.setOnClickListener();
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,11 +184,38 @@ public class MainActivity extends AppCompatActivity {
         tasks.clear();
         Cursor data = database.getTasks();
         while (data.moveToNext()) {
+            if (data.getString(5).equals("true")){
+                StringBuilder sb = new StringBuilder();
+
+                if (data.getString(2).equals("Workout")){
+                    sb.append("W:  ");
+                }
+                else{
+                    sb.append("R:  ");
+                }
+                //sb.append(data.getString(0));
+                //sb.append(' ');
+                sb.append(data.getString(1));
+                sb.append("     ");
+                sb.append(data.getString(3));
+                sb.append(" h ");
+                sb.append(data.getString(4));
+                sb.append(" min");
+
+                tasks.add(sb.toString());
+            }
+
+        }
+        tasksAdapter.notifyDataSetChanged();
+    }
+    /*public void resetTasks() {
+        Cursor data = database.getTasks();
+        while (data.moveToNext()) {
             if (data.getString(5).equals("true"))
                 tasks.add(data.getString(0) + " " + data.getString(1) + " " + data.getString(2) + " " + data.getString(3) + " " + data.getString(4));
         }
         tasksAdapter.notifyDataSetChanged();
-    }
+    }*/
 
     public void deleteTask() {
         //pogledaš kater je biu kliknjen na listView, uzameš uni index, npr 2 (3ji vnos), ta index primerjaš z arralist tasks (tasks.get(2)),
