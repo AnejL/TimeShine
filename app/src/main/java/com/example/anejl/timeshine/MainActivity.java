@@ -153,6 +153,18 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+                insert.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (setupTask()) {
+                            insertTask(dbName, dbType, dbH, dbM, "true");
+                            popUp.dismiss();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Please fill out all information!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
 
             }
         });
@@ -171,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                 final int ind=Integer.parseInt(tasksID.get(position).toString());
 
                 LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                View popupView = inflater.inflate(R.layout.popup_window, null);
+                final View popupView = inflater.inflate(R.layout.popup_window, null);
                 popUp = new PopupWindow(popupView, 800, 1000, true);
                 popUp.showAtLocation(view, Gravity.CENTER, 0, 0);
 
@@ -217,12 +229,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (setupTask()) {
-                            intent.putExtra("id", ind);
-                            intent.putExtra("name", dbName);
-                            intent.putExtra("type", dbType);
-                            intent.putExtra("h", Integer.parseInt(dbH));
-                            intent.putExtra("m", Integer.parseInt(dbM));
-                            startActivity(intent);
+                            database.editTask(ind,dbName,dbType,dbH,dbM);
+                            popUp.dismiss();
+                            showTasks();
                         } else {
                             Toast.makeText(MainActivity.this, "Please fill out all information!", Toast.LENGTH_SHORT).show();
                         }
@@ -243,6 +252,15 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "Please fill out all information!", Toast.LENGTH_SHORT).show();
                         }
 
+                    }
+                });
+
+                insert.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        database.deleteTask(ind);
+                        popUp.dismiss();
+                        showTasks();
                     }
                 });
 
