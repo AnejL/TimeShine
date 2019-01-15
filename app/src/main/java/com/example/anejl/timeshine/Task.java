@@ -28,11 +28,20 @@ public class Task extends AppCompatActivity {
     int id;
     Timer timer;
     PopupWindow popUp;
+    View parent;
+    View popupView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
         Intent intent=getIntent();
+        parent=findViewById(R.id.taskView);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        popupView = inflater.inflate(R.layout.popup_stats,null);
+        popUp = new PopupWindow(popupView, 800, 1000, true);
+
+
         h=intent.getIntExtra("h",0);
         m=intent.getIntExtra("m",0);
         name=intent.getStringExtra("name");
@@ -44,7 +53,6 @@ public class Task extends AppCompatActivity {
         seconds = h*3600+m*60;
         fixedSeconds=seconds;
         database = new DBHelper(this);
-
         timer=new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -69,8 +77,16 @@ public class Task extends AppCompatActivity {
     public void stats(){
         timer.cancel();
         timer.purge();
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                popUp.showAtLocation(parent, Gravity.CENTER, 0, 0);
+            }
+        });
+
+
         database.insertStat(id,"neki");
         Intent intent = new Intent(this, Stats.class);
-        startActivity(intent);
+
     }
 }
