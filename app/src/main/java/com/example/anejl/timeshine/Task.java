@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,9 +24,14 @@ public class Task extends AppCompatActivity {
     TextView countdown;
     TextView percentage;
     TextView task_name;
+    ImageView iw;
+    int percents;
     int seconds;
     int fixedSeconds;
     int id;
+
+    int iwHeight = 10;
+
     Timer timer;
     PopupWindow popUp;
     @Override
@@ -45,14 +51,28 @@ public class Task extends AppCompatActivity {
         fixedSeconds=seconds;
         database = new DBHelper(this);
 
+        iw = (ImageView) findViewById(R.id.iw2);
+
+
+
         timer=new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 countDown();
+                moveImageUp();
             }
         },0,1000);
 
+
+    }
+
+    public void moveImageUp(){
+        percents = Integer.parseInt(percentage.getText().toString().split("%")[0]);
+
+
+        iwHeight = 2000 * percents / 100 - 300;
+        iw.setY(iwHeight);
 
     }
 
@@ -62,6 +82,8 @@ public class Task extends AppCompatActivity {
         if(seconds==0){
             stats();
         }
+
+
         percentage.setText((seconds*100)/fixedSeconds+"%");
         task_name.setText(name);
     }
