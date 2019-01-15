@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,13 +36,16 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     ArrayAdapter<String> tasksAdapter;
     ArrayList tasks;
+    ArrayList tasksID;
     EditText name;
     EditText duration;
 
+    Button insert;
     Button start;
     Button saveStart;
     PopupWindow popUp;
     RadioButton rb1;
+    RadioButton rb2;
     String dbName = "";
     String dbH = "";
     String dbM = "";
@@ -49,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
     Intent intent;
     Intent intentStat;
     private TimePickerDialog.OnTimeSetListener timeSetListener;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,18 +63,14 @@ public class MainActivity extends AppCompatActivity {
 
         database = new DBHelper(this);
 
-
-
         listView = findViewById(R.id.listView);
         tasks = new ArrayList();
+        tasksID = new ArrayList();
         tasksAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, tasks);
         listView.setAdapter(tasksAdapter);
         popUp = new PopupWindow(this);
         intent = new Intent(this, Task.class);
-        intentStat=new Intent(this, stats.class);
-
-
-        //database.reset();
+        intentStat = new Intent(this, Stats.class);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         FloatingActionButton stats = (FloatingActionButton) findViewById(R.id.stats);
@@ -84,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intentStat);
             }
         });
-        //clear.setOnClickListener();
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 name = popupView.findViewById(R.id.name);
                 duration = popupView.findViewById(R.id.duration);
                 rb1 = popupView.findViewById(R.id.workout);
+                insert = popupView.findViewById(R.id.insert);
 
                 duration.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -123,8 +121,8 @@ public class MainActivity extends AppCompatActivity {
                         if (setupTask()) {
                             insertTask(dbName, dbType, dbH, dbM, "true");
                             showTasks();
-                            int index=database.getMaxID();
-                            intent.putExtra("id",index);
+                            int index = database.getMaxID();
+                            intent.putExtra("id", index);
                             intent.putExtra("name", dbName);
                             intent.putExtra("type", dbType);
                             intent.putExtra("h", Integer.parseInt(dbH));
@@ -141,8 +139,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         if (setupTask()) {
                             insertTask(dbName, dbType, dbH, dbM, "false");
-                            int index=database.getMaxID();
-                            intent.putExtra("id",index);
+                            int index = database.getMaxID();
+                            intent.putExtra("id", index);
                             intent.putExtra("name", dbName);
                             intent.putExtra("type", dbType);
                             intent.putExtra("h", Integer.parseInt(dbH));
@@ -160,6 +158,97 @@ public class MainActivity extends AppCompatActivity {
         });
 
         showTasks();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor data = database.getTask(tasksID.get(position) + "");
+                data.moveToFirst();
+                String n = data.getString(0);
+                String t = data.getString(1);
+                dbH = data.getString(2);
+                dbM = data.getString(3);
+                final int ind=Integer.parseInt(tasksID.get(position).toString());
+
+                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+                View popupView = inflater.inflate(R.layout.popup_window, null);
+                popUp = new PopupWindow(popupView, 800, 1000, true);
+                popUp.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+                start = popupView.findViewById(R.id.start);
+                saveStart = popupView.findViewById(R.id.saveStart);
+                name = popupView.findViewById(R.id.name);
+                duration = popupView.findViewById(R.id.duration);
+                rb1 = popupView.findViewById(R.id.workout);
+                rb2 = popupView.findViewById(R.id.rest);
+                insert = popupView.findViewById(R.id.insert);
+
+                saveStart.setText("Edit and Save");
+                insert.setText("Delete");
+                name.setText(n);
+                String time = dbH + "h " + dbM + "m";
+                duration.setText(time);
+
+                if (t.equals("Rest")) {
+                    rb1.toggle();
+                    rb2.toggle();
+                }
+
+                duration.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TimePickerDialog dialog = new TimePickerDialog(MainActivity.this, android.R.style.Theme_DeviceDefault_Dialog_MinWidth, timeSetListener, Integer.parseInt(dbH), Integer.parseInt(dbM), true);
+                        dialog.show();
+                    }
+                });
+
+                timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        String time = hourOfDay + "h " + minute + "m";
+                        duration.setText(time);
+                        dbH = hourOfDay + "";
+                        dbM = minute + "";
+                    }
+                };
+
+
+                saveStart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (setupTask()) {
+                            intent.putExtra("id", ind);
+                            intent.putExtra("name", dbName);
+                            intent.putExtra("type", dbType);
+                            intent.putExtra("h", Integer.parseInt(dbH));
+                            intent.putExtra("m", Integer.parseInt(dbM));
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(MainActivity.this, "Please fill out all information!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                start.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (setupTask()) {
+                            intent.putExtra("id", ind);
+                            intent.putExtra("name", dbName);
+                            intent.putExtra("type", dbType);
+                            intent.putExtra("h", Integer.parseInt(dbH));
+                            intent.putExtra("m", Integer.parseInt(dbM));
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(MainActivity.this, "Please fill out all information!", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+
+            }
+        });
+
     }
 
     public boolean setupTask() {
@@ -184,13 +273,12 @@ public class MainActivity extends AppCompatActivity {
         tasks.clear();
         Cursor data = database.getTasks();
         while (data.moveToNext()) {
-            if (data.getString(5).equals("true")){
+            if (data.getString(5).equals("true")) {
                 StringBuilder sb = new StringBuilder();
 
-                if (data.getString(2).equals("Workout")){
+                if (data.getString(2).equals("Workout")) {
                     sb.append("W:  ");
-                }
-                else{
+                } else {
                     sb.append("R:  ");
                 }
                 //sb.append(data.getString(0));
@@ -201,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
                 sb.append(" h ");
                 sb.append(data.getString(4));
                 sb.append(" min");
-
+                tasksID.add(data.getString(0));
                 tasks.add(sb.toString());
             }
 

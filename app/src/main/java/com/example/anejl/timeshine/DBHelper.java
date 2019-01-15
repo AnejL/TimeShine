@@ -59,19 +59,25 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor data = db.rawQuery("select * from tasks", null);
         return data;
     }
+    public Cursor getTask(String id){
+        SQLiteDatabase db=this.getReadableDatabase();
+        Cursor data=db.query(tasks_table_name,new String[]{tasks_name,tasks_type,tasks_hour,tasks_minute},"id=?",
+                new String[]{id},null,null,null);
+        return data;
+
+    }
 
     public int getMaxID(){
         SQLiteDatabase db=this.getReadableDatabase();
         Cursor data= db.rawQuery("select max(id) from tasks",null);
         data.moveToFirst();
-        int k=data.getInt(0);
         return data.getInt(0);
     }
 
     public void insertStat(int id,String comment){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put("comment","Trenutni Commen");
+        cv.put("comment","Trenutni Comment");
         cv.put("fk_id_task",id);
         db.insert(stats_table_name, null, cv);
     }

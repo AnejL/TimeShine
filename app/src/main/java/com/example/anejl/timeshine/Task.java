@@ -40,7 +40,7 @@ public class Task extends AppCompatActivity {
         id=intent.getIntExtra("id",0);
         countdown=findViewById(R.id.countdown);
         percentage=findViewById(R.id.percentage);
-        task_name=findViewById(R.id.name);
+        task_name=findViewById(R.id.taskname);
         seconds = h*3600+m*60;
         fixedSeconds=seconds;
         database = new DBHelper(this);
@@ -70,7 +70,7 @@ public class Task extends AppCompatActivity {
         timer.cancel();
         timer.purge();
         database.insertStat(id,"neki");
-        Intent intent = new Intent(this, stats.class);
+        Intent intent = new Intent(this, Stats.class);
         startActivity(intent);
     }
 }
