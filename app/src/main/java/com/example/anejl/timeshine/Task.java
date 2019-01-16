@@ -110,7 +110,7 @@ public class Task extends AppCompatActivity {
                 popUp.showAtLocation(parent, Gravity.CENTER, 0, 0);
 
                 start = popupView.findViewById(R.id.start);
-                comment = popupView.findViewById(R.id.start);
+                comment = popupView.findViewById(R.id.comment);
                 rbg = (RadioGroup) popupView.findViewById(R.id.rg);
 
 
