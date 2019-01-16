@@ -46,7 +46,7 @@ public class Stats extends AppCompatActivity {
     }
 
     public void showTasks() {
-        float rating = 0;
+        int rating = 0;
         int count = 0;
         tasks.clear();
         Cursor data = database.getStats();
@@ -54,16 +54,24 @@ public class Stats extends AppCompatActivity {
             Cursor data1 = database.getTask(data.getString(3));
             data1.moveToFirst();
 
-            //rating = rating + data1.getInt(2);
+            rating = rating + data.getInt(2);
             count ++;
 
-            String task=data1.getString(0) + " " + data1.getString(1) + " " + data1.getString(2) + " " + data1.getString(3);
-            tasks.add(data.getString(0) + " " + data.getString(1) + " " + task);
+            String wr = data1.getString(1);
+            if (wr.equals("Workout")){
+                wr = "Work:   ";
+            }
+            else {
+                wr = "Rest:     ";
+            }
+
+            String task=data1.getString(2) + "h " + data1.getString(3) + "m        " + data1.getString(0) ;
+            tasks.add(wr + data.getString(2) + "/5" + "     " + task + "      " + data.getString(1));
 
         }
 
         tasksAdapter.notifyDataSetChanged();
-
-        pb.setProgress(33);
+        int progress = (rating / count) * 100 / 5;
+        pb.setProgress(progress);
     }
 }
