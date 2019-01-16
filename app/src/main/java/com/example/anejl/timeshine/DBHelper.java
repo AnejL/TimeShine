@@ -64,7 +64,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor data=db.query(tasks_table_name,new String[]{tasks_name,tasks_type,tasks_hour,tasks_minute},"id=?",
                 new String[]{id},null,null,null);
         return data;
-
+        
     }
 
     public int getMaxID(){

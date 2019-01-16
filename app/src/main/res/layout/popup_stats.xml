@@ -31,8 +31,10 @@
         android:inputType="textPersonName" />
 
     <RadioGroup
+        android:id="@+id/rg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:checkedButton="@+id/rb3"
         android:orientation="horizontal">
 
         <RadioButton
