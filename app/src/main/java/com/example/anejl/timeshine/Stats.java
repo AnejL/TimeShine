@@ -58,7 +58,7 @@ public class Stats extends AppCompatActivity {
             count ++;
 
             String task=data1.getString(0) + " " + data1.getString(1) + " " + data1.getString(2) + " " + data1.getString(3);
-            tasks.add(data.getString(0) + " " + data.getString(1) + " " + task);
+            tasks.add(data.getString(0) + " " + data.getString(1) + " " +data.getString(2)+ " " + task);
 
         }
 
