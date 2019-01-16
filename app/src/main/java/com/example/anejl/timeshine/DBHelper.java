@@ -27,13 +27,13 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table tasks (id integer primary key autoincrement, name text, type text, hour text, minute text,saved text)");
-        db.execSQL("create table stats (id integer primary key autoincrement, comment text, fk_id_task integer, foreign key (fk_id_task) references tasks(id))");
+        db.execSQL("create table stats (id integer primary key autoincrement, comment text, rating integer, fk_id_task integer, foreign key (fk_id_task) references tasks(id))");
     }
 
     public void reset() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("create table tasks (id integer primary key autoincrement, name text, type text, hour text, minute text,saved text)");
-        db.execSQL("create table stats (id integer primary key autoincrement, comment text, fk_id_task integer, foreign key (fk_id_task) references tasks(id))");
+        db.execSQL("create table stats (id integer primary key autoincrement, comment text, rating integer, fk_id_task integer, foreign key (fk_id_task) references tasks(id))");
     }
 
     @Override
@@ -78,6 +78,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("comment","Trenutni Comment");
+        cv.put("rating", 3);
         cv.put("fk_id_task",id);
         db.insert(stats_table_name, null, cv);
     }

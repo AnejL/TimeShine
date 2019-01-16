@@ -59,14 +59,8 @@ public class Task extends AppCompatActivity {
         seconds = h*3600+m*60;
         fixedSeconds=seconds;
         database = new DBHelper(this);
-<<<<<<< HEAD
-=======
-
         iw = (ImageView) findViewById(R.id.iw2);
 
-
-
->>>>>>> cbb6b20858c48cfc951afe10838076b236568d23
         timer=new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
