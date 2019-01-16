@@ -106,7 +106,7 @@ public class Task extends AppCompatActivity {
             public void run() {
                 LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
                 popupView = inflater.inflate(R.layout.popup_stats, null);
-                popUp = new PopupWindow(popupView, 800, 1000, true);
+                popUp = new PopupWindow(popupView, 800, 600, true);
                 popUp.showAtLocation(parent, Gravity.CENTER, 0, 0);
 
                 start = popupView.findViewById(R.id.start);

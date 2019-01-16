@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="400dp"
-    android:background="#A9A9A9"
+    android:background="#D3D3D3"
     tools:context=".Task">
 
 
@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="47dp"
-        android:layout_marginBottom="142dp"
+        android:layout_marginEnd="104dp"
+        android:layout_marginBottom="12dp"
         android:text="Save"></Button>
 
 
@@ -27,6 +27,7 @@
         android:layout_marginStart="48dp"
         android:layout_marginTop="115dp"
         android:ems="10"
+        android:focusable="true"
         android:hint="Comment"
         android:inputType="textPersonName" />
 

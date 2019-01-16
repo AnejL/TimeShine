@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupView = inflater.inflate(R.layout.popup_window, null);
-                popUp = new PopupWindow(popupView, 800, 1000, true);
+                popUp = new PopupWindow(popupView, 800, 1100, true);
                 popUp.showAtLocation(view, Gravity.CENTER, 0, 0);
 
                 start = popupView.findViewById(R.id.start);
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
 
                 LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
                 final View popupView = inflater.inflate(R.layout.popup_window, null);
-                popUp = new PopupWindow(popupView, 800, 1000, true);
+                popUp = new PopupWindow(popupView, 800, 1100, true);
                 popUp.showAtLocation(view, Gravity.CENTER, 0, 0);
 
                 start = popupView.findViewById(R.id.start);

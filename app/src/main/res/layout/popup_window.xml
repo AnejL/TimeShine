@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="400dp"
-    android:background="#A9A9A9"
+    android:background="#D3D3D3"
     tools:context=".MainActivity">
 
 
@@ -19,6 +19,7 @@
 
     <Button
         android:id="@+id/saveStart"
+        android:width="140dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/start"
@@ -83,5 +84,14 @@
             android:layout_weight="1"
             android:text="Rest" />
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Task"
+        android:textSize="30sp"
+        android:layout_marginLeft="110dp"
+        android:layout_marginTop="10dp"/>
 
 </RelativeLayout>
