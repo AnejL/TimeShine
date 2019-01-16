@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     DBHelper database;
     ListView listView;
     ArrayAdapter<String> tasksAdapter;
-    ArrayList tasks;
+    ArrayList<TaskItem> taskItems;
     ArrayList tasksID;
     EditText name;
     EditText duration;
@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     String dbType = "";
     Intent intent;
     Intent intentStat;
+
+    CustomListAdapter cadp;
     private TimePickerDialog.OnTimeSetListener timeSetListener;
 
     @Override
@@ -64,10 +66,11 @@ public class MainActivity extends AppCompatActivity {
         database = new DBHelper(this);
 
         listView = findViewById(R.id.listView);
-        tasks = new ArrayList();
         tasksID = new ArrayList();
-        tasksAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, tasks);
-        listView.setAdapter(tasksAdapter);
+        taskItems = new ArrayList<>();
+        cadp = new CustomListAdapter(this, taskItems);
+        listView.setAdapter(cadp);
+
         popUp = new PopupWindow(this);
         intent = new Intent(this, Task.class);
         intentStat = new Intent(this, Stats.class);
@@ -98,23 +101,8 @@ public class MainActivity extends AppCompatActivity {
                 rb1 = popupView.findViewById(R.id.workout);
                 insert = popupView.findViewById(R.id.insert);
 
-                duration.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        TimePickerDialog dialog = new TimePickerDialog(MainActivity.this, android.R.style.Theme_DeviceDefault_Dialog_MinWidth, timeSetListener, 0, 0, true);
-                        dialog.show();
-                    }
-                });
+                declarePicker();
 
-                timeSetListener = new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        String time = hourOfDay + "h " + minute + "m";
-                        duration.setText(time);
-                        dbH = hourOfDay + "";
-                        dbM = minute + "";
-                    }
-                };
                 saveStart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -140,12 +128,7 @@ public class MainActivity extends AppCompatActivity {
                         if (setupTask()) {
                             insertTask(dbName, dbType, dbH, dbM, "false");
                             int index = database.getMaxID();
-                            intent.putExtra("id", index);
-                            intent.putExtra("name", dbName);
-                            intent.putExtra("type", dbType);
-                            intent.putExtra("h", Integer.parseInt(dbH));
-                            intent.putExtra("m", Integer.parseInt(dbM));
-                            startActivity(intent);
+                            startTask(index);
                         } else {
                             Toast.makeText(MainActivity.this, "Please fill out all information!", Toast.LENGTH_SHORT).show();
                         }
@@ -159,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                         if (setupTask()) {
                             insertTask(dbName, dbType, dbH, dbM, "true");
                             popUp.dismiss();
+                            showTasks();
                         } else {
                             Toast.makeText(MainActivity.this, "Please fill out all information!", Toast.LENGTH_SHORT).show();
                         }
@@ -180,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                 String t = data.getString(1);
                 dbH = data.getString(2);
                 dbM = data.getString(3);
-                final int ind=Integer.parseInt(tasksID.get(position).toString());
+                final int ind = Integer.parseInt(tasksID.get(position).toString());
 
                 LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
                 final View popupView = inflater.inflate(R.layout.popup_window, null);
@@ -206,30 +190,13 @@ public class MainActivity extends AppCompatActivity {
                     rb2.toggle();
                 }
 
-                duration.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        TimePickerDialog dialog = new TimePickerDialog(MainActivity.this, android.R.style.Theme_DeviceDefault_Dialog_MinWidth, timeSetListener, Integer.parseInt(dbH), Integer.parseInt(dbM), true);
-                        dialog.show();
-                    }
-                });
-
-                timeSetListener = new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        String time = hourOfDay + "h " + minute + "m";
-                        duration.setText(time);
-                        dbH = hourOfDay + "";
-                        dbM = minute + "";
-                    }
-                };
-
+                declarePicker();
 
                 saveStart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (setupTask()) {
-                            database.editTask(ind,dbName,dbType,dbH,dbM);
+                            database.editTask(ind, dbName, dbType, dbH, dbM);
                             popUp.dismiss();
                             showTasks();
                         } else {
@@ -242,12 +209,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (setupTask()) {
-                            intent.putExtra("id", ind);
-                            intent.putExtra("name", dbName);
-                            intent.putExtra("type", dbType);
-                            intent.putExtra("h", Integer.parseInt(dbH));
-                            intent.putExtra("m", Integer.parseInt(dbM));
-                            startActivity(intent);
+                            startTask(ind);
                         } else {
                             Toast.makeText(MainActivity.this, "Please fill out all information!", Toast.LENGTH_SHORT).show();
                         }
@@ -269,6 +231,35 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void startTask(int ind) {
+        intent.putExtra("id", ind);
+        intent.putExtra("name", dbName);
+        intent.putExtra("type", dbType);
+        intent.putExtra("h", Integer.parseInt(dbH));
+        intent.putExtra("m", Integer.parseInt(dbM));
+        startActivity(intent);
+    }
+
+    public void declarePicker() {
+        duration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerDialog dialog = new TimePickerDialog(MainActivity.this, android.R.style.Theme_DeviceDefault_Dialog_MinWidth, timeSetListener, 0, 0, true);
+                dialog.show();
+            }
+        });
+
+        timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                String time = hourOfDay + "h " + minute + "m";
+                duration.setText(time);
+                dbH = hourOfDay + "";
+                dbM = minute + "";
+            }
+        };
+    }
+
     public boolean setupTask() {
         boolean pass = false;
         dbName = name.getText().toString();
@@ -288,31 +279,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showTasks() {
-        tasks.clear();
+        taskItems.clear();
+        tasksID.clear();
         Cursor data = database.getTasks();
         while (data.moveToNext()) {
             if (data.getString(5).equals("true")) {
-                StringBuilder sb = new StringBuilder();
+                TaskItem ti = new TaskItem();
+                ti.setName(data.getString(1));
 
                 if (data.getString(2).equals("Workout")) {
-                    sb.append("W:  ");
+                    ti.setType("Workout");
                 } else {
-                    sb.append("R:  ");
+                    ti.setType("Rest");
                 }
-                //sb.append(data.getString(0));
-                //sb.append(' ');
-                sb.append(data.getString(1));
-                sb.append("     ");
-                sb.append(data.getString(3));
-                sb.append(" h ");
-                sb.append(data.getString(4));
-                sb.append(" min");
+
                 tasksID.add(data.getString(0));
-                tasks.add(sb.toString());
+                ti.setDuration(data.getString(3) + " h " + data.getString(4) + " m");
+                taskItems.add(ti);
             }
 
         }
-        tasksAdapter.notifyDataSetChanged();
+        cadp.notifyDataSetChanged();
     }
     /*public void resetTasks() {
         Cursor data = database.getTasks();
@@ -322,16 +309,6 @@ public class MainActivity extends AppCompatActivity {
         }
         tasksAdapter.notifyDataSetChanged();
     }*/
-
-    public void deleteTask() {
-        //pogledaš kater je biu kliknjen na listView, uzameš uni index, npr 2 (3ji vnos), ta index primerjaš z arralist tasks (tasks.get(2)),
-        // in kličeš database.deleteTask(id);
-    }
-
-    public void editTask() {
-        //isto kot v deleteTask, samo da da zravn daš še duration,name in type.
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
