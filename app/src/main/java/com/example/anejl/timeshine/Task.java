@@ -43,7 +43,7 @@ public class Task extends AppCompatActivity {
     Button start;
     TextView comment;
     RadioGroup rbg;
-    Intent intent;
+    Intent intent2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,7 @@ public class Task extends AppCompatActivity {
         setContentView(R.layout.activity_task);
         Intent intent = getIntent();
         parent = findViewById(R.id.taskView);
-        intent = new Intent(this, Stats.class);
+        intent2 = new Intent(this, Stats.class);
 
         h = intent.getIntExtra("h", 0);
         m = intent.getIntExtra("m", 0);
@@ -80,7 +80,6 @@ public class Task extends AppCompatActivity {
 
     public void moveImageUp() {
         percents = Integer.parseInt(percentage.getText().toString().split("%")[0]);
-
 
         iwHeight = 2000 * percents / 100 - 300;
         iw.setY(iwHeight);
@@ -113,16 +112,18 @@ public class Task extends AppCompatActivity {
                 start = popupView.findViewById(R.id.start);
                 comment = popupView.findViewById(R.id.start);
                 rbg = (RadioGroup) popupView.findViewById(R.id.rg);
-                int id = rbg.getCheckedRadioButtonId();
-                View rb = rbg.findViewById(id);
-                int indx = rbg.indexOfChild(rb);
 
-                String cmnt = comment.getText().toString();
 
                 start.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(intent);
+                        int idd = rbg.getCheckedRadioButtonId();
+                        View rb = rbg.findViewById(idd);
+                        int index = rbg.indexOfChild(rb);
+
+                        String cmnt = comment.getText().toString();
+                        database.insertStat(id,cmnt,index+1);
+                        startActivity(intent2);
 
                     }
                 });

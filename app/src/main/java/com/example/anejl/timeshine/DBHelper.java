@@ -74,11 +74,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return data.getInt(0);
     }
 
-    public void insertStat(int id,String comment){
+    public void insertStat(int id,String comment,int rating){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put("comment","Trenutni Comment");
-        cv.put("rating", 3);
+        cv.put("comment",comment+"");
+        cv.put("rating", rating);
         cv.put("fk_id_task",id);
         db.insert(stats_table_name, null, cv);
     }
