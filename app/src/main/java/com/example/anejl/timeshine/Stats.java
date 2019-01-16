@@ -56,7 +56,6 @@ public class Stats extends AppCompatActivity {
 
             rating = rating + data.getInt(2);
             count ++;
-
             String wr = data1.getString(1);
             if (wr.equals("Workout")){
                 wr = "Work:   ";
