@@ -43,6 +43,13 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public void restart() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("drop table if exists tasks");
+        db.execSQL("drop table if exists stats");
+        onCreate(db);
+    }
+
     public void insertTask(String name, String type, String hour,String minute,String saved) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();

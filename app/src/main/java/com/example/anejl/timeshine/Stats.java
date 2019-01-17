@@ -15,8 +15,15 @@ import java.util.ArrayList;
 public class Stats extends AppCompatActivity {
     ListView listView;
     DBHelper database;
-    ArrayList tasks;
-    ArrayAdapter<String> tasksAdapter;
+    ArrayList stats;
+    //ArrayAdapter<String> statsAdapter;
+
+    //
+    StatsAdapter sadp ;
+    ArrayList statsID;
+    ArrayList<StatsItem> statsItems;
+    //
+
     ProgressBar pb;
     FloatingActionButton home;
 
@@ -28,11 +35,25 @@ public class Stats extends AppCompatActivity {
         setContentView(R.layout.activity_stats);
         database = new DBHelper(this);
         listView = findViewById(R.id.listView);
-        tasks = new ArrayList();
+        stats = new ArrayList();
+
+
         home = (FloatingActionButton) findViewById(R.id.home);
-        tasksAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, tasks);
+
+
+        statsID = new ArrayList();
+
+        //
+        statsItems = new ArrayList<>();
+        sadp = new StatsAdapter(this, statsItems);
+        listView.setAdapter(sadp);
+        //
+
+
         pb = findViewById(R.id.pb);
-        listView.setAdapter(tasksAdapter);
+        listView.setAdapter(sadp);
+
+
         showTasks();
         intentMain = new Intent(this, MainActivity.class);
 
@@ -45,6 +66,68 @@ public class Stats extends AppCompatActivity {
 
     }
 
+
+    public void showTasks() {
+        statsItems.clear();
+        statsID.clear();
+        Cursor dbStats = database.getStats();
+
+        int rating;
+        int ratingSum = 0;
+        int count = 0;
+
+        String stars;
+        //
+        Cursor thisTask;
+
+        if (dbStats.moveToFirst()){
+            while (dbStats.moveToNext()) {
+                StatsItem si = new StatsItem();
+
+                //dobi id taska, ki pripada trenutnemu statsu
+                int tid = dbStats.getInt(3);
+
+                //dobi row iz tasks tabele
+                thisTask = database.getTask(tid + "");
+                thisTask.moveToNext();
+                //nastavi ime statsitema, tako kot je ime taska
+
+
+
+                si.setName(thisTask.getString(0));
+
+                if (thisTask.getString(1).equals("Workout")) {
+                    si.setType("Workout");
+                } else {
+                    si.setType("Rest");
+                }
+
+                statsID.add(dbStats.getString(0));
+                si.setComment(dbStats.getString(1));
+
+                stars = "";
+                rating = Integer.parseInt(dbStats.getString(2));
+                ratingSum += rating;
+                count ++;
+
+                for (int i = 0; i < rating; i++){
+                    stars += "*";
+                }
+
+
+                si.setRating(stars);
+                statsItems.add(si);
+
+            }
+            int progress = (ratingSum / count) * 100 / 5;
+            pb.setProgress(progress);
+            sadp.notifyDataSetChanged();
+        }
+
+
+    }
+
+    /*
     public void showTasks() {
         int rating = 0;
         int count = 0;
@@ -72,5 +155,5 @@ public class Stats extends AppCompatActivity {
         tasksAdapter.notifyDataSetChanged();
         int progress = (rating / count) * 100 / 5;
         pb.setProgress(progress);
-    }
+    }*/
 }

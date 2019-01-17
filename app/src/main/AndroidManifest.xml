@@ -12,20 +12,19 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Task" />
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/AppTheme.NoTitleBar"
-            >
+            android:theme="@style/AppTheme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Stats"></activity>
-
+        <activity android:name=".Stats" />
+        <activity android:name=".stats_row_layout"></activity>
     </application>
 
 </manifest>

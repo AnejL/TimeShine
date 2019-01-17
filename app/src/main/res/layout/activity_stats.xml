@@ -23,7 +23,7 @@
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="637dp"
+        android:layout_height="700dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,17 +46,14 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="118dp"
+        android:layout_width="182dp"
         android:layout_height="28dp"
-        android:text="Avg rating:"
-        android:textSize="16sp"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Average rating:"
 
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="0dp"
 
-
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
